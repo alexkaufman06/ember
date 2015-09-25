@@ -24,7 +24,7 @@
       </header>
       <nav class="navClass centerText">
         {{#link-to "about" class="btn btn-primary"}}About{{/link-to}}
-        <a href="#" class="btn btn-primary">Collections</a>
+        {{#link-to "collections" class="btn btn-primary"}}Collections{{/link-to}}
         <a href="#" class="btn btn-primary">Exhibits</a>
         <a href="#" class="btn btn-primary">Visitor Notes</a>
       </nav>
@@ -98,6 +98,29 @@
             and volunteers, the museum helps to promote the importance of modern
              art around the world.
       </p>
+    </section>
+  </script>
+
+  <!--
+    =================================================================
+    "COLLECTIONS" COMPONENT TEMPLATE: displays the Collection content
+    =================================================================
+  -->
+
+  <script type="text/x-handlebars" id="components/single-collection">
+    <h3>{{title}}</h3>
+    <img {{bind-attr src=image}} class="collectionsImage" align="left">
+    {{yield}}
+  </script>
+
+  <script type="text/x-handlebars" id="collections">
+    <section class="pageClass clearfix">
+      <h2>Collections</h2>
+      {{#each}}
+        {{#single-collection title=title image=image}}
+          {{copy}}
+        {{/single-collection}}
+      {{/each}}
     </section>
   </script>
 
