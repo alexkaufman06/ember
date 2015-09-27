@@ -3,7 +3,9 @@ App = Ember.Application.create();
 App.Router.map(function() {
   this.route("about");
   this.route("collections");
-  this.resource("exhibits");
+  this.resource("exhibits", function(){
+    this.resource("exhibit", { path: "/:exhibit_id"});
+  });
   this.route("notes");
 });
 
@@ -37,3 +39,44 @@ App.SingleCollectionComponent = Ember.Component.extend({
   tagName: "article",
   classNames: ["collectionArticleClass cf"]
 });
+
+/*
+ * CONTROLLERS CODE STARTS HERE
+ */
+
+ // Route for all Exhibits
+ App.ExhibitsRoute = Ember.Route.extend({
+   model: function() {
+     return $.getJSON("js/exhibits.json").then(function(data) {
+       return data.exhibits;
+     });
+   }
+ });
+
+ // Route for a single Exhibit
+ App.ExhibitRoute = Ember.Route.extend({
+   model: function(params) {
+     return $.getJSON("js/exhibits.json").then(function(data) {
+       var modelId = params.exhibit_id - 1;
+       data.exhibits.title = data.exhibits[modelId].title;
+       data.exhibits.artist_name = data.exhibits[modelId].artist_name;
+       data.exhibits.exhibit_info = data.exhibits[modelId].exhibit_info;
+       data.exhibits.image = data.exhibits[modelId].image;
+       return data.exhibits;
+     });
+   }
+ });
+
+ // Array controller...decorates all model data
+ App.ExhibitsController = Ember.ArrayController.extend({
+   totalExhibits: function(){
+     return this.get("model.length");
+   }.property("@each")
+ });
+
+ // Object controller...decorates a single piece of model data
+ App.ExhibitController = Ember.ObjectController.extend({
+   exhibitTitle: function(){
+     return this.get("title") + " by " + this.get("artist_name");
+   }.property("artist_name", "title")
+ });
