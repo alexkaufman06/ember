@@ -53,30 +53,66 @@ App.SingleCollectionComponent = Ember.Component.extend({
    }
  });
 
- // Route for a single Exhibit
- App.ExhibitRoute = Ember.Route.extend({
-   model: function(params) {
-     return $.getJSON("js/exhibits.json").then(function(data) {
-       var modelId = params.exhibit_id - 1;
-       data.exhibits.title = data.exhibits[modelId].title;
-       data.exhibits.artist_name = data.exhibits[modelId].artist_name;
-       data.exhibits.exhibit_info = data.exhibits[modelId].exhibit_info;
-       data.exhibits.image = data.exhibits[modelId].image;
-       return data.exhibits;
-     });
-   }
- });
+// Route for a single Exhibit
+App.ExhibitRoute = Ember.Route.extend({
+  model: function(params) {
+    return $.getJSON("js/exhibits.json").then(function(data) {
+      var modelId = params.exhibit_id - 1;
+      data.exhibits.title = data.exhibits[modelId].title;
+      data.exhibits.artist_name = data.exhibits[modelId].artist_name;
+      data.exhibits.exhibit_info = data.exhibits[modelId].exhibit_info;
+      data.exhibits.image = data.exhibits[modelId].image;
+      return data.exhibits;
+    });
+  }
+});
 
- // Array controller...decorates all model data
- App.ExhibitsController = Ember.ArrayController.extend({
-   totalExhibits: function(){
-     return this.get("model.length");
-   }.property("@each")
- });
+// Array controller...decorates all model data
+App.ExhibitsController = Ember.ArrayController.extend({
+ totalExhibits: function(){
+   return this.get("model.length");
+ }.property("@each")
+});
 
- // Object controller...decorates a single piece of model data
- App.ExhibitController = Ember.ObjectController.extend({
-   exhibitTitle: function(){
-     return this.get("title") + " by " + this.get("artist_name");
-   }.property("artist_name", "title")
- });
+// Object controller...decorates a single piece of model data
+App.ExhibitController = Ember.ObjectController.extend({
+ exhibitTitle: function(){
+   return this.get("title") + " by " + this.get("artist_name");
+ }.property("artist_name", "title")
+});
+
+/*
+* NOTES CODE STARTS HERE
+*/
+
+App.Note = DS.Model.extend({
+   copy: DS.attr()
+});
+
+App.NotesRoute = Ember.Route.extend({
+  model: function() {
+    return this.store.find("note");
+  }
+});
+
+App.NotesController = Ember.ArrayController.extend({
+  actions: {
+    newNote: function() {
+      var copy = this.get("noteText");
+      if (!copy) {
+        return false;
+      }
+
+      var note = this.store.createRecord("note", {
+        copy: copy
+      });
+
+      this.set("noteText", "");
+      note.save();
+    }
+  }
+});
+
+App.ApplicationAdapter = DS.LSAdapter.extend({
+  namespace: "samocaNotes"
+});

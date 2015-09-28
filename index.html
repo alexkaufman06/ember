@@ -26,7 +26,7 @@
         {{#link-to "about" class="btn btn-primary"}}About{{/link-to}}
         {{#link-to "collections" class="btn btn-primary"}}Collections{{/link-to}}
         {{#link-to "exhibits" class="btn btn-primary"}}Exhibits{{/link-to}}
-        <a href="#" class="btn btn-primary">Visitor Notes</a>
+        {{#link-to "notes" class="btn btn-primary"}}Visitor Notes{{/link-to}}
       </nav>
       <main class="mainClass cf">{{outlet}}</main>
       <footer class="footerClass centerText cf">
@@ -168,6 +168,27 @@
         <img {{bind-attr src=image}} class="singleExhibitImage imageBorder" align="left" />
         {{exhibit_info}}
       </p>
+    </article>
+  </script>
+
+  <!--
+    ===============================================
+    "NOTE" PAGE/TEMPLATE: displays the Note content
+    ===============================================
+  -->
+
+  <script type="text/x-handlebars" id="notes">
+    <article class="pageClass">
+      <h2>Visitor Notes</h2>
+      {{textarea placeholder="create a new note" value=noteText rows=10 cols=50}}
+      <p class="btnVolunteerParagraph">
+        <button {{action "newNote"}} class="btn btn-info">Save this note</button>
+      </p>
+      {{#each}}
+        <div class="singleEntry">
+         {{copy}}
+        </div>
+      {{/each}}
     </article>
   </script>
 
